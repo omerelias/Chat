@@ -18,10 +18,8 @@
 							</div>
 						</div>
 						<div class="card-body msg_card_body" id="messages">
-							<div class="circle"  *ngFor="let room of roomData[0] | keyvalue">
-
+							<div class="circle"  *ngFor="let room of roomData | keyvalue">
                                 <div id="{{room.key}}" (click)="onClickJoinRoom(room)" class="text">{{room.key}}</div>
-
                             </div>
                         </div>
 					</div>

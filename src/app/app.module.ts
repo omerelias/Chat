@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
 // import { ExamplechatComponent } from './examplechat/examplechat.component';
 // import { ChatBuiltComponent } from './chat-built/chat-built.component';
 
-const config: SocketIoConfig = { url: 'http://localhost:5000', options: {} };
+const config: SocketIoConfig = { url: 'http://10.0.0.39:5000', options: {} };
 @NgModule({
   declarations: [
     AppComponent,

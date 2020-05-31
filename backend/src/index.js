@@ -25,7 +25,7 @@ app.use(
 
 app.post('/room', (req, res) => {
   rooms[req.body.userName] = { isTaken: false };
-  io.emit('room-created', req.body.userName)
+  io.emit('room-created', req.body.userName);
   res.end();
 })
 
@@ -39,19 +39,21 @@ server.listen(5000, () => {
 });
 
 io.on('connection', function (socket) {
-  socket.on('join-room', (userName, isAgent="No") => {
+  socket.on('join-room', ({userName, isAgent}) => {
     socket.join(userName);
-    if(isAgent==="Yes"){
-      rooms[userName].isTaken=true;
-    }
+    rooms[userName].isTaken=isAgent;
+    
     socket.on('message', function (msg) {
-      console.log('sent message');
       socket.broadcast.to(userName).emit('message', msg);
     });
   
-    socket.on('disconnect', () => {
-      io.in(userName).emit('message', `${isAgent ? 'Agent' : userName} has left the chat!`);
-
+    socket.on('leave-room', (roomName) => {
+      socket.broadcast.to(userName).emit('message', `${isAgent ? 'Agent' : userName} has left the chat!`);
+      socket.removeAllListeners('message');
+      const socketRooms = Object.keys(io.sockets.adapter.sids[socket.id]);
+      const socketRoomsWithoutId = socketRooms.filter(roomName => roomName !== socket.id);
+      
+      socketRoomsWithoutId.forEach(roomName => socket.leave(roomName));
     })
   })
 });

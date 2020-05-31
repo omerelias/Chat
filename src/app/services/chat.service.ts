@@ -5,19 +5,19 @@ import { Socket } from '../../../node_modules/ngx-socket-io';
 
 @Injectable()
 export class ChatService {
-
+    currentRoom = ''
     constructor(private socket: Socket) {}
 
-    // getMessage() {
-    //     return this.socket.fromEvent<any>("msg")
-    //     .map(data => data.msg);
-            
-    // }
+    leaveRoom () {
+        console.log('leaving')
+        this.socket.emit('leave-room', this.currentRoom);
+    }
 
-    // sendMessage(msg: string) {
-    //     this.socket.emit("msg", msg);
+    joinRoom (userName, isAgent=false) {
+        this.currentRoom = userName;
+        this.socket.emit('join-room', {userName, isAgent});
+    }
 
-    // }
     getSocket(){
         return this.socket;
     }

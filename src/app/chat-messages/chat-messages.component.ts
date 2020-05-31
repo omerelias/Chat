@@ -13,20 +13,19 @@ export class ChatMessagesComponent implements OnInit {
 
   constructor(private chatService: ChatService) { }
 
-  ngOnInit(): void {
-
-
-    var msgArr=[];
-    var i=0;
-    var input = document.getElementById("msgcontent");
-input.addEventListener("keyup", function(event) {
-  if (event.keyCode === 13) {
-    document.getElementById("send_msg").click();
+  ngOnDestroy(): void{
+    this.chatService.getSocket().removeAllListeners();
+    console.log(this.chatService.getSocket())
+    this.chatService.leaveRoom();
   }
-});
 
-
-
+  ngOnInit(): void {
+    var input = document.getElementById("msgcontent");
+    input.addEventListener("keyup", function(event) {
+      if (event.keyCode === 13) {
+        document.getElementById("send_msg").click();
+      }
+    });
 
     const socket = this.chatService.getSocket();
      socket.on('message',(msg)=>{
@@ -40,10 +39,9 @@ input.addEventListener("keyup", function(event) {
          <br>
            </div>
          </div>
-       </div>`;
-      
+       </div>`; 
      })
-
+     
     document.getElementById('send_msg').addEventListener('click',()=>{
       var myMsg = (<HTMLInputElement>document.getElementById('msgcontent'))
       socket.emit('message',myMsg.value)
@@ -58,16 +56,8 @@ input.addEventListener("keyup", function(event) {
           </div>
         </div>`;
 
-      (<HTMLInputElement>document.getElementById('msgcontent')).value = '';
-      // addToHtml(myMsg.value);
-      
+      (<HTMLInputElement>document.getElementById('msgcontent')).value = '';      
     });
-      // <span class="msg_time">8:40 AM, Today</span>
-  
-    
-  //   socket.on('broadcast',function(data) {
-  //     document.write(data.description);
-  //  });
   }
 
 }

@@ -17,13 +17,20 @@ export class ClientChatComponent implements OnInit {
   closeResult: string;
 
   constructor( private http: HttpClient,private router: Router,private chatService: ChatService) { }
+
+  ngOnDestroy() : void { 
+    this.chatService.getSocket().removeAllListeners();
+  }
+
   ngOnInit(){
     const socket = this.chatService.getSocket();
+    socket.connect();
+
     let userName = ''
     socket.on('room-created',(roomName)=>{
-      console.log('room created');
       if(roomName===userName){
-        socket.emit('join-room',roomName);
+        this.chatService.joinRoom(roomName, false);
+        this.router.navigate(['/chat']);
       }
     });
     
@@ -31,9 +38,7 @@ export class ClientChatComponent implements OnInit {
       userName = (<HTMLInputElement>document.getElementById('user_chat')).value;
       this.http.post<any>('http://10.0.0.39:5000/room', { userName })
         .subscribe(data => {
-          console.log('sent');
         })
-        this.router.navigate(['/chat']);
     });
     
 

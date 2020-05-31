@@ -26,28 +26,21 @@ import {
   providers: [ChatService]
 })
 export class PortalComponent implements OnInit {
-  roomData: any = [];
-  constructor(private router: Router, private chatService: ChatService, private http: HttpClient, private cdRef: ChangeDetectorRef) {}
-
-  ngOnInit(): void {
-
-    const socket = this.chatService.getSocket();
-
-    this.http.get < any > ("http://10.0.0.39:5000/room").subscribe(data => {
-      this.roomData.push(data)
+  roomData: any = {};
+  constructor(private router: Router, private chatService: ChatService, private http: HttpClient) { }
+  updateRoomsData () {
+    this.http.get<any>("http://10.0.0.39:5000/room").subscribe(data => {
+      this.roomData = data;
     });
-
+  }
+  ngOnInit(): void {
+   this.updateRoomsData();
+   this.chatService.getSocket().on('room-created', this.updateRoomsData.bind(this))
   }
 
   onClickJoinRoom(data) {
-    console.log(data);
-    if (data.value.isTaken === false) {
-      console.log('Not Full');
-    } else {
-      console.log('Full');
-    }
-    this.chatService.getSocket().emit('join-room-admin', data.keys,true); //removed parameter true
-    // this.router.navigate(['/chat']);
+    this.chatService.joinRoom(data.key, true);
+    this.router.navigate(['/chat']);
   };
 
 };
