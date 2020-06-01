@@ -15,7 +15,6 @@ export class ChatMessagesComponent implements OnInit {
 
   ngOnDestroy(): void{
     this.chatService.getSocket().removeAllListeners();
-    console.log(this.chatService.getSocket())
     this.chatService.leaveRoom();
   }
 

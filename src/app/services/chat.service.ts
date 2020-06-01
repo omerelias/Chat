@@ -9,7 +9,6 @@ export class ChatService {
     constructor(private socket: Socket) {}
 
     leaveRoom () {
-        console.log('leaving')
         this.socket.emit('leave-room', this.currentRoom);
     }
 

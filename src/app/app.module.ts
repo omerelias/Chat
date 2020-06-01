@@ -13,6 +13,7 @@ import { HomeComponent } from './home/home.component';
 import { HttpClientModule } from '@angular/common/http';
 import { SocketIoConfig,SocketIoModule } from 'ngx-socket-io';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 // import { ExamplechatComponent } from './examplechat/examplechat.component';
 // import { ChatBuiltComponent } from './chat-built/chat-built.component';
@@ -36,6 +37,7 @@ const config: SocketIoConfig = { url: 'http://10.0.0.39:5000', options: {} };
     HttpClientModule,
     CommonModule,
     SocketIoModule.forRoot(config),
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

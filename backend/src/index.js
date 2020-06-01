@@ -1,12 +1,13 @@
 const app = require('express')();
+var mysql = require('mysql');
+const session = require('express-session');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
-const controllers = require('./api')
-const cors = require('cors')
-const {
-  urlencoded,
-  json
-} = require('body-parser')
+const controllers = require('./api');
+var bodyParser = require('body-parser');
+var path = require('path');
+const cors = require('cors');
+const {urlencoded,json} = require('body-parser');
 
 const rooms = { };
 
@@ -22,6 +23,8 @@ app.use(
   }),
   json()
 );
+
+
 
 app.post('/room', (req, res) => {
   rooms[req.body.userName] = { isTaken: false };
